@@ -19,6 +19,7 @@ src/games/SurviveTheApocalypse/Final_Injectable.lua
 - Embedded UI Library
 - UI theme แบบ Silent Luxury / Obsidian Gold
 - ระบบลบ UI เก่าก่อนสร้างใหม่ กันเมนูซ้อนตอนรันซ้ำ
+- ปุ่มลอยเปิด/ปิด UI / Floating toggle สำหรับซ่อนหรือเรียกเมนูหลักกลับมา
 - Game logic ของ Survive the Apocalypse
 - UI tabs, toggles, sliders และ buttons
 - Cleanup / stop features

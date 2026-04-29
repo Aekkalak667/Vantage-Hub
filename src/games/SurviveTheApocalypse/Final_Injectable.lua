@@ -50,6 +50,45 @@ function Library:CreateWindow(hubName, gameName)
     Stroke.Thickness = 1.5
     Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
+    -- ปุ่มลอยสำหรับเปิด/ปิดหน้าต่างหลัก ใช้เป็นมาตรฐานของ template ทุกเกม
+    local uiVisible = true
+    local ToggleOpenIcon = "VH"
+    local ToggleClosedIcon = "+"
+
+    local FloatingToggleButton = Instance.new("TextButton")
+    FloatingToggleButton.Name = "FloatingToggleButton"
+    FloatingToggleButton.Size = UDim2.new(0, 54, 0, 54)
+    FloatingToggleButton.Position = UDim2.new(0, 20, 0.5, -27)
+    FloatingToggleButton.AnchorPoint = Vector2.new(0, 0)
+    FloatingToggleButton.BackgroundColor3 = Color3.fromRGB(20, 20, 22)
+    FloatingToggleButton.Text = ToggleOpenIcon
+    FloatingToggleButton.TextColor3 = Color3.fromRGB(212, 175, 55)
+    FloatingToggleButton.Font = Enum.Font.GothamBlack
+    FloatingToggleButton.TextSize = 18
+    FloatingToggleButton.AutoButtonColor = false
+    FloatingToggleButton.ZIndex = 50
+    FloatingToggleButton.Parent = ScreenGui
+    Instance.new("UICorner", FloatingToggleButton).CornerRadius = UDim.new(1, 0)
+
+    local FloatingStroke = Instance.new("UIStroke", FloatingToggleButton)
+    FloatingStroke.Color = Color3.fromRGB(212, 175, 55)
+    FloatingStroke.Thickness = 1.5
+    FloatingStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+    local function setUiVisible(visible)
+        uiVisible = visible
+        MainFrame.Visible = uiVisible
+        FloatingToggleButton.Text = uiVisible and ToggleOpenIcon or ToggleClosedIcon
+        TS:Create(FloatingToggleButton, TweenInfo.new(0.2), {
+            BackgroundColor3 = uiVisible and Color3.fromRGB(20, 20, 22) or Color3.fromRGB(212, 175, 55),
+            TextColor3 = uiVisible and Color3.fromRGB(212, 175, 55) or Color3.fromRGB(0, 0, 0)
+        }):Play()
+    end
+
+    FloatingToggleButton.MouseButton1Click:Connect(function()
+        setUiVisible(not uiVisible)
+    end)
+
     -- แถบ Sidebar
     local Sidebar = Instance.new("Frame")
     Sidebar.Name = "Sidebar"
