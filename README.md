@@ -99,7 +99,7 @@ local Window = Library:CreateWindow("Vantage Hub", "My Script")
 - Tab container
 - Page container
 - Drag window
-- Floating toggle button
+- Floating toggle button ที่ลากย้ายตำแหน่งได้
 - Old UI cleanup
 
 ### `Window:CreateTab(name)`

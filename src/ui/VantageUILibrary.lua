@@ -73,6 +73,50 @@ function Library:CreateWindow(hubName, gameName)
     FloatingStroke.Thickness = 1.5
     FloatingStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
+    -- ปุ่มลอยลากได้อิสระ แยกการลากออกจากการกด toggle
+    local floatingDragging, floatingDragInput, floatingDragStart, floatingStartPos
+    local floatingWasDragged = false
+
+    local function updateFloatingPosition(input)
+        local delta = input.Position - floatingDragStart
+        if math.abs(delta.X) > 4 or math.abs(delta.Y) > 4 then
+            floatingWasDragged = true
+        end
+        FloatingToggleButton.Position = UDim2.new(
+            floatingStartPos.X.Scale,
+            floatingStartPos.X.Offset + delta.X,
+            floatingStartPos.Y.Scale,
+            floatingStartPos.Y.Offset + delta.Y
+        )
+    end
+
+    FloatingToggleButton.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            floatingDragging = true
+            floatingWasDragged = false
+            floatingDragStart = input.Position
+            floatingStartPos = FloatingToggleButton.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    floatingDragging = false
+                end
+            end)
+        end
+    end)
+
+    FloatingToggleButton.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            floatingDragInput = input
+        end
+    end)
+
+    UIS.InputChanged:Connect(function(input)
+        if floatingDragging and input == floatingDragInput then
+            updateFloatingPosition(input)
+        end
+    end)
+
     local function setUiVisible(visible)
         uiVisible = visible
         MainFrame.Visible = uiVisible
@@ -84,6 +128,10 @@ function Library:CreateWindow(hubName, gameName)
     end
 
     FloatingToggleButton.MouseButton1Click:Connect(function()
+        if floatingWasDragged then
+            floatingWasDragged = false
+            return
+        end
         setUiVisible(not uiVisible)
     end)
 
